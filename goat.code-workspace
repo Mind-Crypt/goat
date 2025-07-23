@@ -59,6 +59,7 @@
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "biomejs.biome",
 		"eslint.enable": false,
-        "prettier.enable": false
+		"prettier.enable": false,
+		"biome.lsp.bin": "./typescript/node_modules/.bin/biome"
 	}
 }
