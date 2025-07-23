@@ -3,8 +3,8 @@ import { z } from "zod";
 
 export class CryptocurrencyListingsParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         sort: z
             .enum([
                 "market_cap",
@@ -33,7 +33,7 @@ export class CryptocurrencyListingsParameters extends createToolParameters(
             .enum(["all", "coins", "tokens"])
             .optional()
             .describe("Type of cryptocurrency to include"),
-        tag: z.string().optional().describe("Tag to filter by"),
+        tag: z.enum(["all", "defi", "filesharing"]).optional().describe("Tag to filter by"),
         aux: z
             .array(
                 z.enum([
@@ -56,7 +56,7 @@ export class CryptocurrencyListingsParameters extends createToolParameters(
             )
             .optional()
             .describe("Array of auxiliary fields to return"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().min(1).optional().describe("Currency to convert prices to"),
     }),
 ) {}
 

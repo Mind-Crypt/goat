@@ -1,5 +1,5 @@
 export class CoinmarketcapApi {
-    private readonly BASE_URL = "https://pro-api.coinmarketcap.com/";
+    private readonly BASE_URL = "https://pro-api.coinmarketcap.com";
 
     constructor(private readonly apiKey: string) {}
 
