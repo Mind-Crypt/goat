@@ -7,7 +7,7 @@ import {
     EVMWalletClient,
     EVMWalletClientCtorParams,
 } from "@goat-sdk/wallet-evm";
-import { type WalletClient as ViemWalletClient, encodeFunctionData, publicActions } from "viem";
+import { type WalletClient as ViemWalletClient, TransactionRequest, encodeFunctionData, publicActions, SignTransactionParameters } from "viem";
 import { eip712WalletActions, getGeneralPaymasterInput } from "viem/zksync";
 
 export type ViemOptions = EVMWalletClientCtorParams & {
@@ -69,6 +69,10 @@ export class ViemEVMWalletClient extends EVMWalletClient {
                 decimals: chain.nativeCurrency.decimals,
             },
         };
+    }
+
+    getWalletClient(): ViemWalletClient {
+        return this.#client;
     }
 
     async getNativeBalance(): Promise<bigint> {

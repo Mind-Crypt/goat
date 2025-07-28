@@ -1,20 +1,21 @@
 import { Tool } from "@goat-sdk/core";
 import { EVMWalletClient } from "@goat-sdk/wallet-evm";
-import { erc20Abi, maxUint256 } from "viem";
+import { ViemEVMWalletClient } from "@goat-sdk/wallet-viem";
+import { erc20Abi, maxUint256, parseUnits, WalletClient } from "viem";
 import { GetPriceParameters } from "./parameters";
 
 export class Referrer {
     constructor(
         public readonly swapFeeBps: number,
         public readonly swapFeeRecipient: string,
-    ) {}
+    ) { }
 }
 
 export class ZeroExService {
     constructor(
         private readonly apiKey: string,
         private readonly referrer?: Referrer,
-    ) {}
+    ) { }
 
     private async makeRequest(path: string, queryParams: Record<string, string | undefined>) {
         const filteredParams = Object.fromEntries(
@@ -65,10 +66,12 @@ export class ZeroExService {
         name: "0x_swap",
         description: "Swap tokens using 0x",
     })
-    async swap(walletClient: EVMWalletClient, parameters: GetPriceParameters) {
+    async swap(walletClient: ViemEVMWalletClient, parameters: GetPriceParameters) {
         const price = await this.getPrice(walletClient, parameters);
+        console.log("Fetched swap price");
 
         if (price.issues.allowance !== null) {
+            console.log("Sending approval call");
             await walletClient.sendTransaction({
                 to: parameters.sellToken,
                 abi: erc20Abi,
@@ -77,6 +80,7 @@ export class ZeroExService {
             });
         }
 
+        console.log("making 0x quote req");
         const quote = await this.makeRequest("/swap/allowance-holder/quote", {
             chainId: walletClient.getChain().id.toString(),
             sellToken: parameters.sellToken,
@@ -93,13 +97,51 @@ export class ZeroExService {
         });
 
         const transaction = quote.transaction;
+        console.log("0x_swap transaction details:", JSON.stringify(transaction));
 
+        /**
         const tx = await walletClient.sendTransaction({
             to: transaction.to,
             value: transaction.value,
             data: transaction.data,
         });
+         */
 
-        return tx.hash;
+        const viemWalletClient: WalletClient = walletClient.getWalletClient();
+        const account = viemWalletClient.account;
+
+        if (!account) throw new Error("No account connected");
+
+        // Prepare the transaction request with explicit typing
+        const txReq = await viemWalletClient.prepareTransactionRequest({
+            account,
+            to: transaction.to as `0x${string}`,
+            value: BigInt(transaction.value || 0),
+            data: transaction.data as `0x${string}`,
+            gas: 500_000n,
+            chain: viemWalletClient.chain
+        });
+
+        console.log(
+            "Prepared transaction:",
+            JSON.stringify(txReq, (key, value) =>
+                typeof value === "bigint" ? value.toString() : value,
+                2
+            )
+        );
+
+        const serializedTx = await viemWalletClient.signTransaction({
+            ...txReq,
+            account
+        });
+        console.log("Serialized transaction:", serializedTx);
+
+        // Send the raw transaction with correct parameter type
+        const txHash = await viemWalletClient.sendRawTransaction({
+            serializedTransaction: serializedTx
+        });
+
+        console.log("Tx hash:", txHash);
+        return txHash as `0x${string}`;
     }
 }
