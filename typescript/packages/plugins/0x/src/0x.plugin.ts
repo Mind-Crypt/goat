@@ -9,6 +9,7 @@ export type ZeroExCtorParams = {
 };
 
 const supportedChains = [
+    "10143", // monad testnet
     "1",
     "42161", // arbitrum
     "43114", // avalanche
