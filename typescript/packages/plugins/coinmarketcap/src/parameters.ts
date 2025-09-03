@@ -56,7 +56,7 @@ export class CryptocurrencyListingsParameters extends createToolParameters(
             )
             .optional()
             .describe("Array of auxiliary fields to return"),
-        convert: z.string().min(1).optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
     }),
 ) {}
 
@@ -64,7 +64,7 @@ export class CryptocurrencyQuotesLatestParameters extends createToolParameters(
     z.object({
         id: z.array(z.string()).optional().describe("One or more cryptocurrency IDs"),
         symbol: z.array(z.string()).optional().describe("One or more cryptocurrency symbols"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         aux: z
             .array(
                 z.enum([
@@ -93,8 +93,8 @@ export class CryptocurrencyQuotesLatestParameters extends createToolParameters(
 
 export class ExchangeListingsParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         sort: z
             .enum(["name", "volume_24h", "volume_24h_adjusted", "exchange_score"])
             .optional()
@@ -115,7 +115,7 @@ export class ExchangeListingsParameters extends createToolParameters(
             )
             .optional()
             .describe("Array of auxiliary fields to return"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
     }),
 ) {}
 
@@ -123,7 +123,7 @@ export class ExchangeQuotesLatestParameters extends createToolParameters(
     z.object({
         id: z.array(z.string()).optional().describe("One or more exchange IDs"),
         slug: z.array(z.string()).optional().describe("One or more exchange slugs"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         aux: z
             .array(
                 z.enum([
@@ -142,8 +142,8 @@ export class ExchangeQuotesLatestParameters extends createToolParameters(
 
 export class ContentLatestParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         id: z.array(z.string()).optional().describe("One or more cryptocurrency IDs"),
         slug: z.array(z.string()).optional().describe("One or more cryptocurrency slugs, e.g bitcoin, ethereum, etc."),
         symbol: z.array(z.string()).optional().describe("One or more cryptocurrency symbols e.g BTC, ETH, etc."),
@@ -185,8 +185,8 @@ export class ContentLatestParameters extends createToolParameters(
 export class CryptocurrencyMapParameters extends createToolParameters(
     z.object({
         listing_status: z.enum(["active", "inactive", "untracked"]).optional().describe("Status of listings to return"),
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         sort: z.enum(["cmc_rank", "id", "name"]).optional().describe("What field to sort the list by"),
         symbol: z.array(z.string()).optional().describe("Cryptocurrency symbol(s) to filter by"),
         aux: z
@@ -200,7 +200,7 @@ export class CryptocurrencyOHLCVLatestParameters extends createToolParameters(
     z.object({
         id: z.array(z.string()).optional().describe("One or more cryptocurrency IDs"),
         symbol: z.array(z.string()).optional().describe("One or more cryptocurrency symbols"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         convert_id: z.string().optional().describe("Currency ID to convert prices to"),
         skip_invalid: z.boolean().optional().describe("Skip invalid currency conversions"),
     }),
@@ -208,30 +208,30 @@ export class CryptocurrencyOHLCVLatestParameters extends createToolParameters(
 
 export class CryptocurrencyTrendingLatestParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         time_period: z.enum(["24h", "30d", "7d"]).optional().describe("Time period for trending data"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         convert_id: z.string().optional().describe("Currency ID to convert prices to"),
     }),
 ) {}
 
 export class CryptocurrencyTrendingMostVisitedParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         time_period: z.enum(["24h", "30d", "7d"]).optional().describe("Time period for trending data"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         convert_id: z.string().optional().describe("Currency ID to convert prices to"),
     }),
 ) {}
 
 export class CryptocurrencyTrendingGainersLosersParameters extends createToolParameters(
     z.object({
-        start: z.number().optional().describe("Starting position of results"),
-        limit: z.number().optional().describe("Number of results to return"),
+        start: z.number().min(1).optional().describe("Starting position of results"),
+        limit: z.number().min(1).optional().describe("Number of results to return"),
         time_period: z.enum(["1h", "24h", "7d", "30d"]).optional().describe("Time period for trending data"),
-        convert: z.string().optional().describe("Currency to convert prices to"),
+        convert: z.string().default("USD").optional().describe("Currency to convert prices to"),
         convert_id: z.string().optional().describe("Currency ID to convert prices to"),
         sort: z.enum(["percent_change_24h"]).optional().describe("What field to sort the list by"),
         sort_dir: z.enum(["asc", "desc"]).optional().describe("Direction to sort the list"),

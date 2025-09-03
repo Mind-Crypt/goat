@@ -158,7 +158,7 @@ export class CoinmarketcapService {
     })
     async getCryptocurrencyTrending(parameters: CryptocurrencyTrendingLatestParameters) {
         try {
-            return await this.api.makeRequest("/cryptocurrency/trending/latest", {
+            return await this.api.makeRequest("/v1/cryptocurrency/trending/latest", {
                 start: parameters.start,
                 limit: parameters.limit,
                 time_period: parameters.time_period,
