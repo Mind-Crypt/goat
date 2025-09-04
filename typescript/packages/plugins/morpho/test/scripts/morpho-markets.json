@@ -1,0 +1,62 @@
+{
+    "morphoMarketsWithUsdcAsLoanToken": [
+        {
+            "marketId": "0xe36464b73c0c39836918f7b2b9a6f1a8b70d7bb9901b38f29544d9b96119862e",
+            "collateralToken": "0x4200000000000000000000000000000000000006",
+            "collateralSymbol": "ETH",
+            "blockRangeFound": "9300000-9349999"
+        },
+        {
+            "marketId": "0x83fb0cc92d7a231d3cd4877aef62b1c95e7976a329d98c848099aa325da5dcd5",
+            "collateralToken": "0x915d58A9CD53De618964B4A7610F7c6EDc67dE4D",
+            "blockRangeFound": "10000000-10049999"
+        },
+        {
+            "marketId": "0x211d0e92545c0b409bec1f211f68ac016e609f127a64866ef1f0a4fb96b9e2d6",
+            "collateralToken": "0x04b2B7aB4161Ac93898558EeE6eD14038E12F0ED",
+            "blockRangeFound": "10050000-10099999"
+        },
+        {
+            "marketId": "0xb2dd1e4520f0bc0e8ba88de7d1d76b873289f74635499d5edc8db4a9959c1f77",
+            "collateralToken": "0x4200000000000000000000000000000000000006",
+            "collateralSymbol": "ETH",
+            "blockRangeFound": "12600000-12649999"
+        },
+        {
+            "marketId": "0xfca6394fde4fe779fe47d9b97cc1db10cde500c54545fd5e424f3844f6a9f83b",
+            "collateralToken": "0xBf11614292eFEF9474d9bA4a1Cc593f749D9E3dB",
+            "blockRangeFound": "16350000-16399999"
+        },
+        {
+            "marketId": "0xd8356d1186fdd1fc5875f46ba4b0a64dc2f8c321ef01aaf0bbc6a5fc6a557924",
+            "collateralToken": "0x23719ECefD0c3610f7445c0b3a35C2aA15aFF8dB",
+            "blockRangeFound": "28050000-28099999"
+        },
+        {
+            "marketId": "0xf5bfcd0494e9b48c9ac03233242fd9be81fc2e82cc59f89025b9bd8015b7902e",
+            "collateralToken": "0x4200000000000000000000000000000000000006",
+            "collateralSymbol": "ETH",
+            "blockRangeFound": "28050000-28099999"
+        },
+        {
+            "marketId": "0xd8f8e91a6cdbbe25de7d774a5b91f4bc52a8978b37445723189b62bcbaefadfa",
+            "collateralToken": "0x4200000000000000000000000000000000000006",
+            "collateralSymbol": "ETH",
+            "blockRangeFound": "28150000-28199999"
+        },
+        {
+            "marketId": "0x6e3ef266fb2473fb61d43bd4629e813bb4f5959ba03fed9555a35431f6d643eb",
+            "collateralToken": "0x4200000000000000000000000000000000000006",
+            "collateralSymbol": "ETH",
+            "blockRangeFound": "28350000-28399999"
+        },
+        {
+            "marketId": "0xef9ef4b96c7426698f2e763e4c67609887bdb38de539e734ca4143fdf5aa1b3d",
+            "collateralToken": "0x25A966621Cbe48662fAb0e374B4ba69Eb4aFc4d8",
+            "blockRangeFound": "29350000-29399999"
+        }
+    ],
+    "loanTokenAddress": "0x036cbd53842c5426634e7929541ec2318f3dcf7e",
+    "loanTokenSymbol": "USDC",
+    "morphoAddress": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb"
+}
