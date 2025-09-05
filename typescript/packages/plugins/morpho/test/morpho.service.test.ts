@@ -171,6 +171,46 @@ describe("MorphoService - Real On-Chain Tests", () => {
 
         console.log("User Position:", position);
     }, 15000); // 15 second timeout
+
+    test("should withdraw tokens from the market", async () => {
+        // Only run this test if you want to actually withdraw tokens
+        // This will cost gas and require real tokens
+        // Get exact supply shares first
+        const prePosition = await morphoService.getPosition(viemWalletClient, {
+            marketId: MARKET_ID,
+            user: accountAddress,
+        });
+
+        // Then withdraw using the exact share amount
+        const txHash = await morphoService.withdraw(viemWalletClient, {
+            marketId: MARKET_ID,
+            assets: "0",
+            shares: prePosition.supplyShares, // Use exact share amount
+        });
+
+        console.log(`Withdraw transaction: ${txHash}`);
+        expect(txHash).toBeDefined();
+
+        // Wait for the transaction to be mined
+        await new Promise((resolve) => setTimeout(resolve, 15000));
+
+        // Verify position was updated
+        const position = await morphoService.getPosition(viemWalletClient, {
+            marketId: MARKET_ID,
+            user: accountAddress,
+        });
+
+        console.log("Updated Position:", position);
+        expect(BigInt(position.supplyShares)).toBe(BigInt(0));
+
+        // Asset based withdraw
+        // const withdrawAmount = parseUnits("1", LOAN_TOKEN_DECIMALS).toString();
+        // const txHash = await morphoService.withdraw(viemWalletClient, {
+        //     marketId: MARKET_ID,
+        //     assets: withdrawAmount,
+        //     shares: "0",
+        // });
+    }, 30000); // 30 second timeout
 });
 
 /**

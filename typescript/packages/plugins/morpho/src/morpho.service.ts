@@ -2,7 +2,7 @@ import { Tool } from "@goat-sdk/core";
 import type { ViemEVMWalletClient } from "@goat-sdk/wallet-viem";
 import type { Abi } from "viem";
 import { MORPHO_ABI } from "./abi/morpho";
-import { MarketInfoParams, MarketPositionParams, SupplyParams } from "./parameters";
+import { MarketInfoParams, MarketPositionParams, SupplyParams, WithdrawParams } from "./parameters";
 import { getMorphoAddresses } from "./types/ChainSpecifications";
 
 export class MorphoService {
@@ -36,6 +36,32 @@ export class MorphoService {
             throw Error(`Failed to supply to Morpho: ${error}`);
         }
     }
+
+    @Tool({
+        name: "morpho_withdraw",
+        description: "Withdraw assets from a Morpho market using market ID",
+    })
+    async withdraw(walletClient: ViemEVMWalletClient, parameters: WithdrawParams) {
+        try {
+            const { morphoAddress } = getMorphoAddresses(walletClient.getChain().id);
+            const onBehalf = parameters.onBehalf || walletClient.getAddress();
+            const receiver = parameters.receiver || walletClient.getAddress();
+
+            // Get market params from market ID
+            const marketParams = await this.getMarketParams(walletClient, parameters.marketId);
+
+            const hash = await walletClient.sendTransaction({
+                to: morphoAddress,
+                abi: MORPHO_ABI as Abi,
+                functionName: "withdraw",
+                args: [marketParams, BigInt(parameters.assets), BigInt(parameters.shares || "0"), onBehalf, receiver],
+            });
+            return hash.hash;
+        } catch (error) {
+            throw Error(`Failed to withdraw from Morpho: ${error}`);
+        }
+    }
+
 
     @Tool({
         name: "morpho_get_position",
