@@ -1,6 +1,7 @@
 import { Tool } from "@goat-sdk/core";
-import type { ViemEVMWalletClient } from "@goat-sdk/wallet-viem";
-import type { Abi } from "viem";
+import { ViemEVMWalletClient } from "@goat-sdk/wallet-viem";
+import { Abi } from "viem";
+import { erc20Abi } from "viem";
 import { MORPHO_ABI } from "./abi/morpho";
 import { MarketInfoParams, MarketPositionParams, SupplyParams, WithdrawParams } from "./parameters";
 import { getMorphoAddresses } from "./types/ChainSpecifications";
@@ -18,6 +19,17 @@ export class MorphoService {
             // Get market params from market ID
             const marketParams = await this.getMarketParams(walletClient, parameters.marketId);
             console.log("Morpho Supply tool::market params:", marketParams);
+
+            console.log("Sending approval call");
+            await walletClient.sendTransaction({
+                to: parameters.supplyAsset,
+                abi: erc20Abi,
+                functionName: "approve",
+                args: [morphoAddress, BigInt(parameters.assets)],
+            });
+
+            // Wait for the transaction to be mined
+            await new Promise((resolve) => setTimeout(resolve, 15000));
 
             const hash = await walletClient.sendTransaction({
                 to: morphoAddress,
@@ -62,7 +74,6 @@ export class MorphoService {
         }
     }
 
-
     @Tool({
         name: "morpho_get_position",
         description: "Get the position of a user in a Morpho market using market ID",
@@ -95,6 +106,7 @@ export class MorphoService {
     })
     async getMarketInfo(walletClient: ViemEVMWalletClient, parameters: MarketInfoParams) {
         try {
+
             const { morphoAddress } = getMorphoAddresses(walletClient.getChain().id);
             const marketResult = await walletClient.read({
                 address: morphoAddress,

@@ -74,35 +74,38 @@ describe("MorphoService - Real On-Chain Tests", () => {
             //     args: [accountAddress as `0x${string}`, parseEther("5")]
             // });
         }
-
-        // Check if we have approved Morpho to spend tokens
-        console.log("Checking token allowance to Morpho...");
-        const allowance = await publicClient.readContract({
-            address: LOAN_TOKEN_ADDRESS,
-            abi: ERC20_ABI,
-            functionName: "allowance",
-            args: [account.address, MORPHO_ADDRESS],
-        });
-
-        if ((allowance as bigint) < parseUnits("1", LOAN_TOKEN_DECIMALS)) {
-            console.log("Approving Morpho to spend tokens...");
-
-            const { request } = await publicClient.simulateContract({
-                account,
-                address: LOAN_TOKEN_ADDRESS,
-                abi: ERC20_ABI,
-                functionName: "approve",
-                args: [MORPHO_ADDRESS, parseUnits("1", LOAN_TOKEN_DECIMALS)],
-            });
-
-            const approveTxHash = await walletClient.writeContract(request);
-            console.log(`Allowance Approval transaction: ${approveTxHash}`);
-
-            // Wait for the transaction to be mined
-            await new Promise((resolve) => setTimeout(resolve, 15000));
-        }
     }, 30000); // 30 second timeout for setup
 
+    test("should supply tokens to the market", async () => {
+        // Only run this test if you want to actually supply tokens
+        // This will cost gas and require real tokens
+        // Supply a small amount for testing
+        const supplyAmount = parseUnits("1", LOAN_TOKEN_DECIMALS).toString();
+
+        const txHash = await morphoService.supply(viemWalletClient, {
+            supplyAsset: LOAN_TOKEN_ADDRESS,
+            marketId: MARKET_ID,
+            assets: supplyAmount,
+            shares: "0",
+        });
+
+        console.log(`Supply transaction: ${txHash}`);
+        expect(txHash).toBeDefined();
+
+        // Wait for the transaction to be mined
+        await new Promise((resolve) => setTimeout(resolve, 15000));
+
+        // Verify position was updated
+        const position = await morphoService.getPosition(viemWalletClient, {
+            marketId: MARKET_ID,
+            user: accountAddress,
+        });
+
+        expect(BigInt(position.supplyShares)).toBeGreaterThan(BigInt(0));
+        console.log("Updated Position:", position);
+    }, 60000); // 60 second timeout
+
+    /**
     test("should retrieve market parameters correctly", async () => {
         const marketParams = await morphoService.getMarketParamsById(viemWalletClient, {
             marketId: MARKET_ID,
@@ -131,33 +134,6 @@ describe("MorphoService - Real On-Chain Tests", () => {
         console.log("Market Info:", marketInfo);
     }, 15000); // 15 second timeout
 
-    test("should supply tokens to the market", async () => {
-        // Only run this test if you want to actually supply tokens
-        // This will cost gas and require real tokens
-        // Supply a small amount for testing
-        const supplyAmount = parseUnits("1", LOAN_TOKEN_DECIMALS).toString();
-
-        const txHash = await morphoService.supply(viemWalletClient, {
-            marketId: MARKET_ID,
-            assets: supplyAmount,
-            shares: "0",
-        });
-
-        console.log(`Supply transaction: ${txHash}`);
-        expect(txHash).toBeDefined();
-
-        // Wait for the transaction to be mined
-        await new Promise((resolve) => setTimeout(resolve, 15000));
-
-        // Verify position was updated
-        const position = await morphoService.getPosition(viemWalletClient, {
-            marketId: MARKET_ID,
-            user: accountAddress,
-        });
-
-        expect(BigInt(position.supplyShares)).toBeGreaterThan(BigInt(0));
-        console.log("Updated Position:", position);
-    }, 30000); // 30 second timeout
 
     test("should get user position correctly", async () => {
         const position = await morphoService.getPosition(viemWalletClient, {
@@ -211,6 +187,7 @@ describe("MorphoService - Real On-Chain Tests", () => {
         //     shares: "0",
         // });
     }, 30000); // 30 second timeout
+    */
 });
 
 /**

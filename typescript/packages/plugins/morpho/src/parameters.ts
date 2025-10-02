@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export class SupplyParams extends createToolParameters(
     z.object({
+        supplyAsset: z.string().describe("The asset address to supply (e.g., USDC)"),
         marketId: z.string().describe("The market ID (bytes32) to supply to"),
         assets: z.string().describe("The amount of assets to supply in base units"),
         shares: z.string().optional().default("0").describe("The amount of shares to supply (use 0 for exact assets)"),
@@ -72,7 +73,7 @@ export class WithdrawCollateralParams extends createToolParameters(
 export class MarketPositionParams extends createToolParameters(
     z.object({
         marketId: z.string().describe("The market ID (bytes32) to check"),
-        user: z.string().describe("The address to check the position of"),
+        user: z.string().describe("The public address to check the position of as `0x${string}`"),
     }),
 ) {}
 
